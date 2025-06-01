@@ -1,0 +1,58 @@
+{% extends 'admissions/base.html' %}
+
+{% block title %}Create Admission List - {{ block.super }}{% endblock %}
+
+{% block admissions_content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title mb-0">Create New Admission List</h4>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="stream" class="form-label">Select Stream</label>
+                        <select class="form-select" id="stream" name="stream" required>
+                            <option value="">Choose a stream...</option>
+                            {% for stream in streams %}
+                            <option value="{{ stream.id }}">{{ stream.college.name }} - {{ stream.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="list_type" class="form-label">List Type</label>
+                        <select class="form-select" id="list_type" name="list_type" required>
+                            <option value="">Choose a list type...</option>
+                            <option value="LIST_1">Merit List 1</option>
+                            <option value="LIST_2">Merit List 2</option>
+                            <option value="LIST_3">Merit List 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle"></i> Important Information</h5>
+                <ul class="mb-0">
+                    <li>Creating a new admission list will automatically select eligible students based on the cutoff marks.</li>
+                    <li>Students will be selected based on their priority and eligibility.</li>
+                    <li>After creating the list, you can review and publish it to notify selected students.</li>
+                </ul>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create List
+                </button>
+                <a href="{% url 'admissions:admission_lists' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Lists
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

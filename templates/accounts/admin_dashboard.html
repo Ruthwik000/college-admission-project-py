@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="display-4 fw-bold mb-4 text-center">Admin Dashboard</h1>
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <p class="lead">Centralized control panel for managing all aspects of the college admission system.</p>
+        </div>
+    </div>
+
+    <!-- 1. College Management -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="h4 fw-bold mb-3"><i class="fas fa-university me-2"></i>College Management</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'colleges:add_college' %}" class="btn btn-outline-primary"><i class="fas fa-plus-circle me-1"></i>Add College</a>
+                <a href="{% url 'colleges:college_list' %}" class="btn btn-outline-primary"><i class="fas fa-edit me-1"></i>Edit/Delete College</a>
+                <a href="{% url 'colleges:manage_streams' %}" class="btn btn-outline-primary"><i class="fas fa-stream me-1"></i>Manage Streams</a>
+                <a href="{% url 'colleges:set_seat_limits' %}" class="btn btn-outline-primary"><i class="fas fa-chair me-1"></i>Set Seat Limits</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Cutoff Management -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="h4 fw-bold mb-3"><i class="fas fa-chart-line me-2"></i>Cutoff Management</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'cutoffs:add_cutoff' %}" class="btn btn-outline-success"><i class="fas fa-calendar-plus me-1"></i>Add Previous Year Cutoffs</a>
+                <a href="{% url 'cutoffs:create_list' %}" class="btn btn-outline-success"><i class="fas fa-list-ol me-1"></i>Create Current Year Cutoff Lists</a>
+                <a href="{% url 'cutoffs:edit_cutoff' %}" class="btn btn-outline-success"><i class="fas fa-edit me-1"></i>Edit/Update Cutoffs</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Application Management -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="h4 fw-bold mb-3"><i class="fas fa-file-alt me-2"></i>Application Management</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'admissions:admission_lists' %}" class="btn btn-outline-info"><i class="fas fa-list me-1"></i>View Applications</a>
+                <a href="{% url 'admissions:accept_reject' %}" class="btn btn-outline-info"><i class="fas fa-check-circle me-1"></i>Accept/Reject Applications</a>
+                <a href="{% url 'admissions:track_status' %}" class="btn btn-outline-info"><i class="fas fa-tasks me-1"></i>Track Status</a>
+                <a href="{% url 'admissions:bulk_actions' %}" class="btn btn-outline-info"><i class="fas fa-tasks me-1"></i>Bulk Actions</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Student Management -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="h4 fw-bold mb-3"><i class="fas fa-user-graduate me-2"></i>Student Management</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'admissions:register_students' %}" class="btn btn-outline-warning"><i class="fas fa-user-check me-1"></i>Register Student</a>
+                <a href="{% url 'admissions:remove_student' %}" class="btn btn-outline-warning"><i class="fas fa-user-times me-1"></i>Remove Student</a>
+                <a href="{% url 'admissions:final_list' %}" class="btn btn-outline-warning"><i class="fas fa-clipboard-list me-1"></i>Final List of Admitted Students</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Dashboard & Notifications -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="h4 fw-bold mb-3"><i class="fas fa-chart-pie me-2"></i>Dashboard & Notifications</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'accounts:statistics_dashboard' %}" class="btn btn-outline-dark"><i class="fas fa-chart-bar me-1"></i>Statistics Dashboard</a>
+                <a href="{% url 'accounts:send_notifications' %}" class="btn btn-outline-dark"><i class="fas fa-bell me-1"></i>Send Notifications</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Account & Security -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="h4 fw-bold mb-3"><i class="fas fa-user-cog me-2"></i>Account & Security</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'accounts:edit_profile' %}" class="btn btn-outline-secondary"><i class="fas fa-user-edit me-1"></i>Manage Admin Profile</a>
+                <a href="{% url 'accounts:change_password' %}" class="btn btn-outline-secondary"><i class="fas fa-key me-1"></i>Change Password</a>
+                <a href="{% url 'accounts:audit_logs' %}" class="btn btn-outline-secondary"><i class="fas fa-history me-1"></i>Audit Logs</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

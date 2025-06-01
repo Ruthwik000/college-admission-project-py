@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Cutoff Comparison{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4 text-center">Cutoff Comparison</h1>
+
+    <div class="alert alert-info text-center">
+        This page will display cutoff ranks for different colleges and streams for easy comparison.
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <form action="." method="get">
+                <div class="input-group">
+                    <label class="input-group-text" for="yearSelect">Select Year:</label>
+                    <select class="form-select" id="yearSelect" name="year" onchange="this.form.submit()">
+                        {% for year in available_years %}
+                        <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+         <div class="col-md-4">
+            <form action="." method="get">
+                 <div class="input-group">
+                    <label class="input-group-text" for="categorySelect">Select Caste:</label>
+                    <select class="form-select" id="categorySelect" name="category" onchange="this.form.submit()">
+                        {% for category_value, category_label in available_categories %}
+                            <option value="{{ category_value }}" {% if category_value == selected_category %}selected{% endif %}>{{ category_label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if comparison_data %}
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>College</th>
+                    <th>Stream</th>
+                    {% comment %}
+                    We now iterate through years_to_display instead of years
+                    as the view is filtered by selected_year.
+                    {% endcomment %}
+                    {% for year in years_to_display %}
+                    <th>{{ year }} ({{ selected_category }})</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in comparison_data %}
+                <tr>
+                    <td>{{ row.college.name }}</td>
+                    <td>{{ row.stream.name }}</td>
+                    <td>{{ row.cutoff }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        <i class="fas fa-info-circle me-2"></i> No cutoff data available for comparison for the selected year and caste.
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %} 

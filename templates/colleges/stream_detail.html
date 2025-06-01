@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ stream.name }} - {{ stream.college.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'colleges:college_list' %}">Colleges</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'colleges:college_detail' stream.college.id %}">{{ stream.college.name }}</a></li>
+                    <li class="breadcrumb-item active">{{ stream.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">{{ stream.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-3 text-muted">{{ stream.get_stream_type_display }}</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fas fa-university me-2 text-primary"></i>College: {{ stream.college.name }}</li>
+                    <li class="list-group-item"><i class="fas fa-clock me-2 text-primary"></i>Duration: {{ stream.duration_years }} years</li>
+                    <li class="list-group-item"><i class="fas fa-users me-2 text-primary"></i>Total Seats: {{ stream.total_seats }}</li>
+                    <li class="list-group-item"><i class="fas fa-money-bill-wave me-2 text-primary"></i>Fees: ₹{{ stream.fees_per_year }} per year</li>
+                </ul>
+                <div class="card-footer bg-transparent">
+                    <div class="d-grid gap-2">
+                        {% if user.is_authenticated and user.userprofile.user_type == 'STUDENT' %}
+                        <a href="{% url 'admissions:apply' stream.id %}" class="btn btn-success">
+                            <i class="fas fa-file-signature me-1"></i> Apply Now
+                        </a>
+                        {% elif not user.is_authenticated %}
+                        <a href="{% url 'accounts:login' %}?next={% url 'admissions:apply' stream.id %}" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login to Apply
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>About {{ stream.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ stream.description|linebreaks }}</p>
+                    
+                    <h5 class="mt-4"><i class="fas fa-check-circle me-2 text-primary"></i>Eligibility Criteria:</h5>
+                    <p>{{ stream.eligibility_criteria|linebreaks }}</p>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-chart-line me-2"></i>Current Cutoffs</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_cutoffs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Category</th>
+                                    <th>Percentage</th>
+                                    <th>Opening Rank</th>
+                                    <th>Closing Rank</th>
+                                    <th>Available Seats</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cutoff in current_cutoffs %}
+                                <tr>
+                                    <td>{{ cutoff.get_cutoff_type_display }}</td>
+                                    <td>{{ cutoff.get_category_display }}</td>
+                                    <td>{{ cutoff.percentage }}%</td>
+                                    <td>{{ cutoff.opening_rank|default:"N/A" }}</td>
+                                    <td>{{ cutoff.closing_rank|default:"N/A" }}</td>
+                                    <td>{{ cutoff.available_seats }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> No current cutoffs available for this stream.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-history me-2"></i>Previous Year Cutoffs</h5>
+                </div>
+                <div class="card-body">
+                    {% if previous_cutoffs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Category</th>
+                                    <th>Percentage</th>
+                                    <th>Opening Rank</th>
+                                    <th>Closing Rank</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cutoff in previous_cutoffs %}
+                                <tr>
+                                    <td>{{ cutoff.year }}</td>
+                                    <td>{{ cutoff.get_category_display }}</td>
+                                    <td>{{ cutoff.percentage }}%</td>
+                                    <td>{{ cutoff.opening_rank|default:"N/A" }}</td>
+                                    <td>{{ cutoff.closing_rank|default:"N/A" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> No previous year cutoffs available for this stream.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Colleges - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold"><i class="fas fa-university me-2"></i>Colleges</h1>
+            <p class="lead">Browse through our list of affiliated colleges</p>
+        </div>
+    </div>
+
+    {% if colleges %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for college in colleges %}
+        <div class="col">
+            <div class="card h-100 shadow-sm hover-card">
+                {% if college.logo %}
+                <img src="{{ college.logo.url }}" class="card-img-top p-3" alt="{{ college.name }} Logo" style="height: 180px; object-fit: contain;">
+                {% else %}
+                <div class="card-img-top text-center p-4 bg-light">
+                    <i class="fas fa-university fa-5x text-primary"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ college.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Code: {{ college.code }}</h6>
+                    <p class="card-text">{{ college.description|truncatewords:25 }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fas fa-calendar-alt me-2 text-primary"></i>Established: {{ college.established_year }}</li>
+                    <li class="list-group-item"><i class="fas fa-phone me-2 text-primary"></i>{{ college.phone }}</li>
+                    <li class="list-group-item"><i class="fas fa-envelope me-2 text-primary"></i>{{ college.email }}</li>
+                </ul>
+                <div class="card-footer bg-transparent">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'colleges:college_detail' college.id %}" class="btn btn-primary">
+                            <i class="fas fa-info-circle me-1"></i> View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> No colleges available at the moment.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

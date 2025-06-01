@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ college.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'colleges:college_list' %}">Colleges</a></li>
+                    <li class="breadcrumb-item active">{{ college.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                {% if college.logo %}
+                <img src="{{ college.logo.url }}" class="card-img-top p-3" alt="{{ college.name }} Logo">
+                {% else %}
+                <div class="card-img-top text-center p-5 bg-light">
+                    <i class="fas fa-university fa-6x text-primary"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h4 class="card-title fw-bold">{{ college.name }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Code: {{ college.code }}</h6>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fas fa-calendar-alt me-2 text-primary"></i>Established: {{ college.established_year }}</li>
+                    <li class="list-group-item"><i class="fas fa-phone me-2 text-primary"></i>{{ college.phone }}</li>
+                    <li class="list-group-item"><i class="fas fa-envelope me-2 text-primary"></i>{{ college.email }}</li>
+                    {% if college.website %}
+                    <li class="list-group-item"><i class="fas fa-globe me-2 text-primary"></i><a href="{{ college.website }}" target="_blank">{{ college.website }}</a></li>
+                    {% endif %}
+                    {% if college.closing_rank %}
+                    <li class="list-group-item"><i class="fas fa-chart-area me-2 text-primary"></i>College Closing Rank: {{ college.closing_rank }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>About {{ college.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <p>{{ college.description|linebreaks }}</p>
+                    <h6 class="mt-4"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Address:</h6>
+                    <p>{{ college.address|linebreaks }}</p>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-graduation-cap me-2"></i>Available Streams</h5>
+                </div>
+                <div class="card-body">
+                    {% if streams %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Duration</th>
+                                    <th>Seats</th>
+                                    <th>Fees (per year)</th>
+                                    <th>Closing Rank</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for stream in streams %}
+                                <tr>
+                                    <td>{{ stream.name }}</td>
+                                    <td>{{ stream.get_stream_type_display }}</td>
+                                    <td>{{ stream.duration_years }} years</td>
+                                    <td>{{ stream.total_seats }}</td>
+                                    <td>₹{{ stream.fees_per_year }}</td>
+                                    <td>{{ stream.lowest_closing_rank|default:"N/A" }}</td>
+                                    <td>
+                                        <a href="{% url 'colleges:stream_detail' stream.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-info-circle"></i> Details
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> No streams available for this college at the moment.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

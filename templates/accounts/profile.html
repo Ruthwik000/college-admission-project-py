@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0"><i class="fas fa-user-circle me-2"></i>My Profile</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            {% if user_profile.profile_picture %}
+                            <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="max-width: 150px;">
+                            {% else %}
+                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 150px; height: 150px;">
+                                <i class="fas fa-user fa-5x text-secondary"></i>
+                            </div>
+                            {% endif %}
+                            <div class="mt-2">
+                                <a href="{% url 'accounts:edit_profile' %}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-edit me-1"></i>Edit Profile
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h5 class="mb-3">{{ user.get_full_name|default:user.username }}</h5>
+                            <div class="mb-3">
+                                <p><strong><i class="fas fa-envelope me-2"></i>Email:</strong> {{ user.email|default:"Not provided" }}</p>
+                                <p><strong><i class="fas fa-phone me-2"></i>Phone:</strong> {{ user_profile.phone_number|default:"Not provided" }}</p>
+                                <p><strong><i class="fas fa-calendar me-2"></i>Date of Birth:</strong> {{ user_profile.date_of_birth|date:"F d, Y"|default:"Not provided" }}</p>
+                                <p><strong><i class="fas fa-venus-mars me-2"></i>Gender:</strong> {{ user_profile.get_gender_display|default:"Not provided" }}</p>
+                                <p><strong><i class="fas fa-map-marker-alt me-2"></i>Address:</strong> {{ user_profile.address|default:"Not provided" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if student_profile %}
+                    <hr>
+                    <h5 class="mb-3"><i class="fas fa-graduation-cap me-2"></i>Academic Information</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Student ID:</strong> {{ student_profile.student_id }}</p>
+                            <p><strong>Father's Name:</strong> {{ student_profile.father_name }}</p>
+                            <p><strong>Mother's Name:</strong> {{ student_profile.mother_name }}</p>
+                            <p><strong>Guardian Phone:</strong> {{ student_profile.guardian_phone }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Previous School:</strong> {{ student_profile.previous_school }}</p>
+                            <p><strong>Board:</strong> {{ student_profile.board }}</p>
+                            <p><strong>Passing Year:</strong> {{ student_profile.passing_year }}</p>
+                            <p><strong>Percentage:</strong> {{ student_profile.percentage }}%</p>
+                            <p><strong>Category:</strong> {{ student_profile.get_category_display }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

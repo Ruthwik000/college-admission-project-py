@@ -1,0 +1,88 @@
+{% extends 'cutoffs/base.html' %}
+
+{% block title %}Create Cutoff - {{ block.super }}{% endblock %}
+
+{% block cutoffs_content %}
+<div class="card">
+    <div class="card-header">
+        <h4 class="card-title mb-0">Create New Cutoff</h4>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="stream" class="form-label">Select Stream</label>
+                        <select class="form-select" id="stream" name="stream" required>
+                            <option value="">Choose a stream...</option>
+                            {% for stream in streams %}
+                            <option value="{{ stream.id }}">{{ stream.college.name }} - {{ stream.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="cutoff_type" class="form-label">Cutoff Type</label>
+                        <select class="form-select" id="cutoff_type" name="cutoff_type" required>
+                            <option value="">Choose a cutoff type...</option>
+                            <option value="CURRENT_1">Current Year - List 1</option>
+                            <option value="CURRENT_2">Current Year - List 2</option>
+                            <option value="CURRENT_3">Current Year - List 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Choose a category...</option>
+                            <option value="GENERAL">General</option>
+                            <option value="OBC">OBC</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                            <option value="EWS">EWS</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="cutoff_percentage" class="form-label">Cutoff Percentage</label>
+                        <input type="number" class="form-control" id="cutoff_percentage" name="cutoff_percentage" min="0" max="100" step="0.01" required>
+                        <div class="form-text">Enter the cutoff percentage (0-100).</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="available_seats" class="form-label">Available Seats</label>
+                <input type="number" class="form-control" id="available_seats" name="available_seats" min="0" required>
+                <div class="form-text">Enter the number of available seats for this category.</div>
+            </div>
+
+            <div class="alert alert-info">
+                <h5><i class="fas fa-info-circle"></i> Important Information</h5>
+                <ul class="mb-0">
+                    <li>Cutoff percentages are used to determine student eligibility for admission lists.</li>
+                    <li>Students must score equal to or higher than the cutoff percentage to be considered for admission.</li>
+                    <li>Different cutoff types are used for different admission lists.</li>
+                    <li>Available seats indicate the number of seats reserved for each category.</li>
+                </ul>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Cutoff
+                </button>
+                <a href="{% url 'cutoffs:cutoff_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Cutoffs
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

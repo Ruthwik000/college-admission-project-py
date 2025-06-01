@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - College Admission Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Hero Section -->
+    <div class="row align-items-center py-5 hero-section">
+        <div class="col-md-10 mx-auto text-center">
+            <h1 class="display-3 fw-bold mb-4">Welcome to College Admission Management System</h1>
+            <p class="lead mb-4 fs-5">Streamline your college admission process with our comprehensive management system. Apply for courses, track your application status, and receive real-time notifications.</p>
+            {% if not user.is_authenticated %}
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg px-4 gap-3 shadow-sm">
+                    <i class="fas fa-user-plus me-2"></i> Register Now
+                </a>
+                <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg px-4">
+                    <i class="fas fa-sign-in-alt me-2"></i> Login
+                </a>
+            </div>
+            {% else %}
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{% url 'colleges:college_list' %}" class="btn btn-primary btn-lg px-4 gap-3 shadow-sm">
+                    <i class="fas fa-university me-2"></i> Browse Colleges
+                </a>
+                <a href="{% url 'admissions:my_applications' %}" class="btn btn-outline-primary btn-lg px-4">
+                    <i class="fas fa-file-alt me-2"></i> My Applications
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row py-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="display-5 fw-bold">Key Features</h2>
+            <p class="lead">Everything you need for a smooth admission process</p>
+        </div>
+        {% if user.is_authenticated and user.userprofile.user_type == 'ADMIN' %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 hover-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-university fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title h5 fw-bold">College Management</h3>
+                    <p class="card-text">Add and manage colleges, streams, and their details.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 hover-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title h5 fw-bold">Cutoff Management</h3>
+                    <p class="card-text">Manage cutoffs and create admission lists for each stream.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 hover-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-user-graduate fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title h5 fw-bold">Student Registration</h3>
+                    <p class="card-text">Process applications and register selected students.</p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 hover-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-university fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title h5 fw-bold">College Information</h3>
+                    <p class="card-text">Access detailed information about colleges, courses, and eligibility criteria.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 hover-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-clipboard-check fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title h5 fw-bold">Application Tracking</h3>
+                    <p class="card-text">Track your application status in real-time and stay updated on admission decisions.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm border-0 hover-card">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-bell fa-3x text-primary mb-3"></i>
+                    <h3 class="card-title h5 fw-bold">Real-time Updates</h3>
+                    <p class="card-text">Receive instant notifications about your application status and important updates.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="row py-5 bg-light rounded shadow-sm">
+        <div class="col-12 text-center mb-4">
+            <h2 class="display-5 fw-bold">How It Works</h2>
+            <p class="lead">Simple steps to complete your admission process</p>
+        </div>
+        <!-- Steps -->
+        <div class="col-md-3 mb-4">
+            <div class="text-center">
+                <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px;">
+                    <h3 class="m-0">1</h3>
+                </div>
+                <h4>Register</h4>
+                <p>Create an account to get started with the admission process.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="text-center">
+                <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px;">
+                    <h3 class="m-0">2</h3>
+                </div>
+                <h4>Browse Colleges</h4>
+                <p>Explore colleges and streams available for admission.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="text-center">
+                <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px;">
+                    <h3 class="m-0">3</h3>
+                </div>
+                <h4>Apply</h4>
+                <p>Submit your applications for your preferred streams.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="text-center">
+                <div class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px;">
+                    <h3 class="m-0">4</h3>
+                </div>
+                <h4>Track Status</h4>
+                <p>Monitor your application status and complete admission process.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row py-5">
+        <div class="col-12 text-center">
+            {% if not user.is_authenticated %}
+            <h2 class="mb-4">Ready to start your admission journey?</h2>
+            <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-lg px-5 shadow">
+                <i class="fas fa-user-plus me-2"></i> Register Now
+            </a>
+            {% elif user.userprofile.user_type == 'ADMIN' %}
+            <h2 class="mb-4">Welcome to Admin Dashboard</h2>
+            <a href="{% url 'accounts:admin_dashboard' %}" class="btn btn-primary btn-lg px-5 shadow">
+                <i class="fas fa-user-shield me-2"></i> Go to Admin Dashboard
+            </a>
+            {% else %}
+            <h2 class="mb-4">Continue your admission journey</h2>
+            <a href="{% url 'colleges:college_list' %}" class="btn btn-primary btn-lg px-5 shadow">
+                <i class="fas fa-university me-2"></i> Browse Colleges
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

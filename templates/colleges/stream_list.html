@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Streams - {{ college.name }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'colleges:college_list' %}">Colleges</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'colleges:college_detail' college.id %}">{{ college.name }}</a></li>
+                    <li class="breadcrumb-item active">Streams</li>
+                </ol>
+            </nav>
+            <h1 class="display-5 fw-bold">{{ college.name }} - Streams</h1>
+            <p class="lead">Browse through available streams at {{ college.name }}</p>
+        </div>
+    </div>
+    
+    {% if streams %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for stream in streams %}
+        <div class="col">
+            <div class="card h-100 shadow-sm hover-card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">{{ stream.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-3 text-muted">{{ stream.get_stream_type_display }}</h6>
+                    <p class="card-text">{{ stream.description|truncatewords:30 }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fas fa-clock me-2 text-primary"></i>Duration: {{ stream.duration_years }} years</li>
+                    <li class="list-group-item"><i class="fas fa-users me-2 text-primary"></i>Total Seats: {{ stream.total_seats }}</li>
+                    <li class="list-group-item"><i class="fas fa-money-bill-wave me-2 text-primary"></i>Fees: ₹{{ stream.fees_per_year }} per year</li>
+                </ul>
+                <div class="card-footer bg-transparent">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'colleges:stream_detail' stream.id %}" class="btn btn-primary">
+                            <i class="fas fa-info-circle me-1"></i> View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> No streams available for this college at the moment.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

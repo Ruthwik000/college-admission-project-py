@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}Login - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0"><i class="fas fa-sign-in-alt me-2"></i>Login to Your Account</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    <div class="messages mb-4">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <i class="fas fa-info-circle me-2"></i>{{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" name="username" id="username" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Login As</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="user_type" id="student" value="STUDENT" checked>
+                                <label class="form-check-label" for="student">
+                                    <i class="fas fa-user-graduate me-1"></i>Student
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="user_type" id="admin" value="ADMIN">
+                                <label class="form-check-label" for="admin">
+                                    <i class="fas fa-user-shield me-1"></i>Admin
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                            <div class="text-center">
+                                Don't have an account? 
+                                <a href="{% url 'accounts:register' %}" class="text-decoration-none">
+                                    <i class="fas fa-user-plus me-1"></i>Register
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+
+    const userTypeRadios = document.querySelectorAll('input[name="user_type"]');
+    const originalFormAction = form.action;
+
+    userTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'ADMIN' && this.checked) {
+                form.action = '/admin/login/';
+            } else {
+                form.action = originalFormAction;
+            }
+        });
+    });
+
+    // Set initial form action based on default selected radio button
+    const initiallyChecked = document.querySelector('input[name="user_type"]:checked');
+    if (initiallyChecked && initiallyChecked.value === 'ADMIN') {
+        form.action = '/admin/login/';
+    } else {
+        form.action = originalFormAction;
+    }
+
+});
+</script>
+{% endblock %}
+{% endblock %}
