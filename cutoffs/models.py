@@ -1,7 +1,29 @@
+"""
+Cutoff Models for the College Admission System.
+
+This module contains models related to cutoff scores and admission criteria
+for different colleges and courses.
+"""
+
 from django.db import models
 from colleges.models import Stream
 
 class CutOff(models.Model):
+    """
+    Cutoff model to store admission cutoff scores.
+    
+    This model stores the minimum required scores for admission to different
+    courses at various colleges.
+    
+    Attributes:
+        stream (ForeignKey): Reference to the Stream model
+        cutoff_type (CharField): Type of cutoff (Previous Year, Current Year - List 1, etc.)
+        year (IntegerField): Academic year
+        category (CharField): Student category (General, SC, ST, etc.)
+        cutoff_percentage (DecimalField): Minimum required score
+        available_seats (IntegerField): Total number of seats available
+        closing_rank (IntegerField): Minimum required rank
+    """
     CUTOFF_TYPES = [
         ('PREVIOUS', 'Previous Year'),
         ('CURRENT_1', 'Current Year - List 1'),
@@ -28,8 +50,10 @@ class CutOff(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """String representation of the Cutoff model."""
         return f"{self.stream.name} - {self.cutoff_type} - {self.category} - {self.cutoff_percentage}%"
 
     class Meta:
+        """Meta options for the Cutoff model."""
         ordering = ['-year', 'stream', 'category']
         unique_together = ['stream', 'cutoff_type', 'year', 'category']

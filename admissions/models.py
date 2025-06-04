@@ -1,12 +1,36 @@
+"""
+Admission Models for the College Admission System.
+
+This module contains models related to the admission process,
+including application forms, documents, and admission status tracking.
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
-from colleges.models import Stream
+from colleges.models import Stream, College, Course
 from accounts.models import StudentProfile
 from django.core.mail import send_mail
 from django.conf import settings
 from notifications.models import Notification
 
 class Application(models.Model):
+    """
+    Application model to store student admission applications.
+    
+    This model tracks the entire admission process for a student's application
+    to a specific course at a college.
+    
+    Attributes:
+        student (ForeignKey): Reference to the User model (student)
+        stream (ForeignKey): Reference to the Stream model
+        application_number (CharField): Unique identifier for the application
+        application_date (DateTimeField): Date when the application was submitted
+        status (CharField): Current status of the application
+        priority (IntegerField): Student's preference order
+        documents_verified (BooleanField): Whether required documents are verified
+        fees_paid (BooleanField): Status of application fee payment
+        remarks (TextField): Any additional remarks or notes
+    """
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('SELECTED_LIST_1', 'Selected in List 1'),
@@ -30,6 +54,7 @@ class Application(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """String representation of the Application model."""
         return f"{self.student.get_full_name()} - {self.stream.name} - {self.status}"
 
     def save(self, *args, **kwargs):
@@ -146,6 +171,7 @@ College Admission System
             )
 
     class Meta:
+        """Meta options for the Application model."""
         ordering = ['-application_date']
         unique_together = ['student', 'stream']
 
@@ -185,3 +211,38 @@ class Admission(models.Model):
 
     class Meta:
         ordering = ['roll_number']
+
+class Document(models.Model):
+    """
+    Document model to store application-related documents.
+    
+    This model manages the documents submitted by students during the
+    admission process.
+    
+    Attributes:
+        application (ForeignKey): Reference to the Application model
+        document_type (CharField): Type of document
+        file (FileField): The actual document file
+        uploaded_date (DateTimeField): Date when the document was uploaded
+        is_verified (BooleanField): Whether the document has been verified
+    """
+    DOCUMENT_TYPES = [
+        ('MARKSHEET', 'Marksheet'),
+        ('CERTIFICATE', 'Certificate'),
+        ('ID_PROOF', 'ID Proof'),
+        ('OTHER', 'Other'),
+    ]
+
+    application = models.ForeignKey(Application, on_delete=models.CASCADE, related_name='documents')
+    document_type = models.CharField(max_length=20, choices=DOCUMENT_TYPES)
+    file = models.FileField(upload_to='documents/')
+    uploaded_date = models.DateTimeField(auto_now_add=True)
+    is_verified = models.BooleanField(default=False)
+
+    def __str__(self):
+        """String representation of the Document model."""
+        return f"{self.document_type} for {self.application}"
+
+    class Meta:
+        """Meta options for the Document model."""
+        ordering = ['-uploaded_date']

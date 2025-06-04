@@ -1,8 +1,28 @@
+"""
+User Profile Models for the College Admission System.
+
+This module contains the UserProfile model which extends Django's built-in User model
+to store additional information about users in the system.
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class UserProfile(models.Model):
+    """
+    UserProfile model extends the default User model with additional fields.
+    
+    This model is used to store additional information about users that is not
+    included in Django's default User model, such as phone number and address.
+    
+    Attributes:
+        user (OneToOneField): One-to-one relationship with Django's User model
+        phone_number (CharField): User's contact phone number
+        address (TextField): User's physical address
+    """
     USER_TYPES = [
         ('STUDENT', 'Student'),
         ('ADMIN', 'Admin'),
@@ -26,10 +46,37 @@ class UserProfile(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
+        """String representation of the UserProfile model."""
         return f"{self.user.username} - {self.user_type}"
 
     class Meta:
         ordering = ['user__username']
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Signal handler to automatically create a UserProfile when a new User is created.
+    
+    Args:
+        sender: The model class (User)
+        instance: The actual instance being saved
+        created: Boolean; True if a new record was created
+        **kwargs: Additional keyword arguments
+    """
+    if created:
+        UserProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """
+    Signal handler to automatically save the UserProfile when the User is saved.
+    
+    Args:
+        sender: The model class (User)
+        instance: The actual instance being saved
+        **kwargs: Additional keyword arguments
+    """
+    instance.userprofile.save()
 
 class StudentProfile(models.Model):
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
